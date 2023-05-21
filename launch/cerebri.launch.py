@@ -1,32 +1,46 @@
 from os import environ
-from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, Shutdown
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
-from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument, OpaqueFunction, Shutdown
 from launch.actions import ExecuteProcess
+from launch.substitutions import LaunchConfiguration
 
+def launch_cerebri(context, *args, **kwargs):
 
-ARGUMENTS = [
-]
-
-def generate_launch_description():
+    uart_shell = LaunchConfiguration('uart_shell').perform(context)
+    debugger = LaunchConfiguration('debugger').perform(context)
 
     cerebri_bin = environ.get('CEREBRI_BINARY')
-    cerebri_cmd = f"{cerebri_bin}"
-    cerebri = LaunchDescription([
-        ExecuteProcess(
+    cmd = f"{cerebri_bin}"
+
+    if uart_shell:
+        print("Using UART shell!")
+        cmd_args = "--attach_uart"
+    else:
+        cmd_args = ""
+
+    if debugger != 'false':
+        debug_prefix = 'x-terminal-emulator -e gdb -ex run --args'
+    else:
+        debug_prefix = 'x-terminal-emulator -e'
+
+    return [ExecuteProcess(
+            cmd=[cmd, cmd_args],
             name='cerebri',
-            prefix="terminator -u -T cerebri -x gdbtui --args",
-            cmd=cerebri_cmd.split(),
+            prefix=debug_prefix,
             output='screen',
             shell=True,
             on_exit=Shutdown()
-            ),
-    ])
+            )]
 
-    return LaunchDescription(ARGUMENTS + [
-        cerebri,
+def generate_launch_description():
+    return LaunchDescription([
+        DeclareLaunchArgument(
+            'uart_shell', default_value='true',
+            choices=['true', 'false'],
+            description='Run with uart shell.'),
+        DeclareLaunchArgument(
+            'debugger', default_value='false',
+            description='Run in Debugger'),
+        OpaqueFunction(function = launch_cerebri),
     ])
