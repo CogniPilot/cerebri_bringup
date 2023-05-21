@@ -14,7 +14,6 @@ def launch_cerebri(context, *args, **kwargs):
     cmd = f"{cerebri_bin}"
 
     if uart_shell:
-        print("Using UART shell!")
         cmd_args = "--attach_uart"
     else:
         cmd_args = ""
