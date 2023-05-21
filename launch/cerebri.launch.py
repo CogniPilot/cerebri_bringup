@@ -15,11 +15,12 @@ ARGUMENTS = [
 def generate_launch_description():
 
     cerebri_bin = environ.get('CEREBRI_BINARY')
-    cerebri_cmd = f"{cerebri_bin} -attach_uart_cmd='xterm -fg white -bg black -e screen %s &'"
+    cerebri_cmd = f"{cerebri_bin}"
     cerebri = LaunchDescription([
         ExecuteProcess(
+            name='cerebri',
             cmd=cerebri_cmd.split(),
-            output="log",
+            output='screen',
             shell=True),
     ])
 
