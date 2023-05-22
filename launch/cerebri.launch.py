@@ -12,16 +12,17 @@ def launch_cerebri(context, *args, **kwargs):
 
     cerebri_bin = environ.get('CEREBRI_BINARY')
     cmd = f"{cerebri_bin}"
+    xterm_cmd = 'xterm -fa Monospace -fs 12 -fg grey -bg black'
 
     if uart_shell:
-        cmd_args = "--attach_uart"
+        cmd_args = f"--attach_uart_cmd='{xterm_cmd} -T cerebri-shell -e screen %s &'"
     else:
         cmd_args = ""
 
     if debugger != 'false':
-        debug_prefix = 'x-terminal-emulator -e gdb -ex run --args'
+        debug_prefix = f'{xterm_cmd} -T cerebri -e gdb -ex run --args'
     else:
-        debug_prefix = 'x-terminal-emulator -e'
+        debug_prefix = f'{xterm_cmd} -T cerebri -e'
 
     return [ExecuteProcess(
             cmd=[cmd, cmd_args],
