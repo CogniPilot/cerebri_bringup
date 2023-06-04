@@ -9,9 +9,10 @@ def launch_cerebri(context, *args, **kwargs):
 
     uart_shell = LaunchConfiguration('uart_shell').perform(context)
     debugger = LaunchConfiguration('debugger').perform(context)
+    vehicle = LaunchConfiguration('vehicle').perform(context)
 
-    cerebri_bin = environ.get('CEREBRI_BINARY')
-    cmd = f"{cerebri_bin}"
+    cerebri_bin = environ.get('CEREBRI_BINARY_BASE')
+    cmd = f"{cerebri_bin}/{vehicle}/build/zephyr/zephyr.exe"
     xterm_cmd = 'xterm -fa Monospace -fs 12 -fg grey -bg black'
 
     if uart_shell:
@@ -42,5 +43,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'debugger', default_value='false',
             description='Run in Debugger'),
+        DeclareLaunchArgument('vehicle',
+            description='Vehicle to launch'),
         OpaqueFunction(function = launch_cerebri),
     ])
