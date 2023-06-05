@@ -15,7 +15,7 @@ def launch_cerebri(context, *args, **kwargs):
     cmd = f"{cerebri_bin}/{vehicle}/build/zephyr/zephyr.exe"
     xterm_cmd = 'xterm -fa Monospace -fs 12 -fg grey -bg black'
 
-    if uart_shell:
+    if uart_shell != 'false':
         cmd_args = f"--attach_uart_cmd='{xterm_cmd} -T cerebri-shell -e screen %s &'"
     else:
         cmd_args = ""
@@ -37,7 +37,7 @@ def launch_cerebri(context, *args, **kwargs):
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
-            'uart_shell', default_value='true',
+            'uart_shell', default_value='false',
             choices=['true', 'false'],
             description='Run with uart shell.'),
         DeclareLaunchArgument(
