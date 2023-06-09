@@ -11,8 +11,7 @@ def launch_cerebri(context, *args, **kwargs):
     debugger = LaunchConfiguration('debugger').perform(context)
     vehicle = LaunchConfiguration('vehicle').perform(context)
 
-    cerebri_bin = environ.get('CEREBRI_BINARY_BASE')
-    cmd = f"{cerebri_bin}/{vehicle}/build/zephyr/zephyr.exe"
+    cmd = f"cerebri_{vehicle}_native_posix_64"
     xterm_cmd = 'xterm -fa Monospace -fs 12 -fg grey -bg black'
 
     if uart_shell != 'false':
