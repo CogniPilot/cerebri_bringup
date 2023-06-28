@@ -11,7 +11,7 @@ def launch_cerebri(context, *args, **kwargs):
     debugger = LaunchConfiguration('debugger').perform(context)
     vehicle = LaunchConfiguration('vehicle').perform(context)
 
-    cmd = f"cerebri_{vehicle}_native_posix_64"
+    cmd = f"cerebri_{vehicle}_native_posix"
     xterm_cmd = 'xterm -fa Monospace -fs 12 -fg grey -bg black'
 
     if uart_shell != 'false':
