@@ -9,6 +9,7 @@ def launch_cerebri(context, *args, **kwargs):
 
     uart_shell = LaunchConfiguration('uart_shell').perform(context)
     gdb = LaunchConfiguration('gdb').perform(context)
+    xterm = LaunchConfiguration('xterm').perform(context)
     vehicle = LaunchConfiguration('vehicle').perform(context)
 
     cmd = f"cerebri_{vehicle}_native_posix"
@@ -19,15 +20,17 @@ def launch_cerebri(context, *args, **kwargs):
     else:
         uart_args = ""
 
+    prefix = ''
+    if xterm != 'false':
+        prefix += f'{xterm_cmd} -T cerebri -e'
+
     if gdb != 'false':
-        debug_prefix = f'{xterm_cmd} -T cerebri -e gdb --args'
-    else:
-        debug_prefix = f'{xterm_cmd} -T cerebri -e'
+        prefix += 'gdb --args'
 
     return [ExecuteProcess(
             cmd=[cmd, uart_args],
             name='cerebri',
-            prefix=debug_prefix,
+            prefix=prefix,
             output='screen',
             shell=True,
             on_exit=Shutdown()
@@ -42,6 +45,9 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'gdb', default_value='false',
             description='Run in GDB Debugger'),
+        DeclareLaunchArgument(
+            'xterm', default_value='true',
+            description='Launch in xterm'),
         DeclareLaunchArgument('vehicle',
             description='Vehicle to launch'),
         OpaqueFunction(function = launch_cerebri),
