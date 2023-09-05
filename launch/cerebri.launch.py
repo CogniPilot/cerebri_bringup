@@ -22,7 +22,7 @@ def launch_cerebri(context, *args, **kwargs):
 
     prefix = ''
     if xterm != 'false':
-        prefix += f'{xterm_cmd} -T cerebri -e'
+        prefix += f'{xterm_cmd} -T cerebri -e '
 
     if gdb != 'false':
         prefix += 'gdb --args'
