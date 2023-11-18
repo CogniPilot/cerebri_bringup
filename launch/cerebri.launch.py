@@ -7,21 +7,26 @@ from launch.substitutions import LaunchConfiguration
 
 def launch_cerebri(context, *args, **kwargs):
 
-    attach_uart = LaunchConfiguration('attach_uart').perform(context)
+    uart = LaunchConfiguration('uart').perform(context)
     gdb = LaunchConfiguration('gdb').perform(context)
     vehicle = LaunchConfiguration('vehicle').perform(context)
+    xterm = LaunchConfiguration('xterm').perform(context)
 
     cerebri_exe = [f"cerebri_{vehicle}_native_posix"]
     xterm_cmd = 'xterm -fa Monospace -fs 12 -fg grey -bg black -T cerebri-gdb -e '
 
-    if attach_uart != 'false':
+    if uart != 'false':
         uart_args = ["--attach_uart"]
     else:
         uart_args = []
 
     prefix = ''
+
+    if xterm != 'false':
+        prefix += xterm_cmd 
+
     if gdb != 'false':
-        prefix += xterm_cmd + 'gdb --args '
+        prefix += 'gdb --args '
 
     cmd = cerebri_exe + uart_args
     # print(f'executing cmd: {cmd}')
@@ -39,7 +44,11 @@ def launch_cerebri(context, *args, **kwargs):
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
-            'attach_uart', default_value='true',
+            'xterm', default_value='true',
+            choices=['true', 'false'],
+            description='Run with xterm.'),
+        DeclareLaunchArgument(
+            'uart', default_value='false',
             choices=['true', 'false'],
             description='Run with uart shell.'),
         DeclareLaunchArgument(
