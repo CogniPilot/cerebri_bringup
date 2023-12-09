@@ -13,7 +13,7 @@ def launch_cerebri(context, *args, **kwargs):
     xterm = LaunchConfiguration('xterm').perform(context)
 
     cerebri_exe = [f"cerebri_{vehicle}_native_posix"]
-    xterm_cmd = 'xterm -fa Monospace -fs 12 -fg grey -bg black -T cerebri-gdb -e '
+    xterm_cmd = 'xterm -fa Monospace -fs 12 -fg grey -bg black -T cerebri -e '
 
     if uart != 'false':
         uart_args = ["--attach_uart"]
