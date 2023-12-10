@@ -12,13 +12,8 @@ def launch_cerebri(context, *args, **kwargs):
     vehicle = LaunchConfiguration('vehicle').perform(context)
     xterm = LaunchConfiguration('xterm').perform(context)
 
-    cerebri_exe = [f"cerebri_{vehicle}_native_posix"]
+    cerebri_exe = [f"cerebri_{vehicle}_native_sim"]
     xterm_cmd = 'xterm -fa Monospace -fs 12 -fg grey -bg black -T cerebri -e '
-
-    if uart != 'false':
-        uart_args = ["--attach_uart"]
-    else:
-        uart_args = []
 
     prefix = ''
 
@@ -28,7 +23,7 @@ def launch_cerebri(context, *args, **kwargs):
     if gdb != 'false':
         prefix += 'gdb --args '
 
-    cmd = cerebri_exe + uart_args
+    cmd = cerebri_exe
     # print(f'executing cmd: {cmd}')
     # print(f'prefix: {prefix}')
     return [ExecuteProcess(
@@ -47,10 +42,6 @@ def generate_launch_description():
             'xterm', default_value='true',
             choices=['true', 'false'],
             description='Run with xterm.'),
-        DeclareLaunchArgument(
-            'uart', default_value='false',
-            choices=['true', 'false'],
-            description='Run with uart shell.'),
         DeclareLaunchArgument(
             'gdb', default_value='false',
             description='Run in GDB Debugger'),
