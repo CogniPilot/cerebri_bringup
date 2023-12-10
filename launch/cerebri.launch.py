@@ -7,7 +7,6 @@ from launch.substitutions import LaunchConfiguration
 
 def launch_cerebri(context, *args, **kwargs):
 
-    uart = LaunchConfiguration('uart').perform(context)
     gdb = LaunchConfiguration('gdb').perform(context)
     vehicle = LaunchConfiguration('vehicle').perform(context)
     xterm = LaunchConfiguration('xterm').perform(context)
