@@ -15,7 +15,7 @@ def launch_cerebri(context, *args, **kwargs):
     prefix = ''
 
     if gdb != 'false':
-        prefix += 'gdb --args '
+        prefix += 'xterm -title gdb_cerebri -fg grey -bg black -e gdb --args '
 
     cmd = cerebri_exe
     # print(f'executing cmd: {cmd}')
